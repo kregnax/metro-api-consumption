@@ -35,7 +35,6 @@ routes_json = routes_response.json()
 
 #Use a generator converted to a list to find a match for the requested route
 routes = list((route for route in routes_json if req_route.lower() in route['Description'].lower()))
-
 #If more than 1 potential route matches, display routes so user can rerun script with desired route
 if len(routes) > 1:
     print('More than one possible route found, please rerun script using the desired route:')
@@ -77,11 +76,9 @@ except StopIteration as stopiter:
     print('\n'.join(stop['Text'] for stop in stops_json))
     quit()
 
-
+#If we reach this point, we have a valid route, stop, and direction
 departures_response = requests.get(get_departures_url.format(route=route, direction=direction, stop=stop), params=payload)
 handle_status_code(departures_response.status_code)
-
-#If we reach this point, we have a valid route, stop, and direction
 departures_json = departures_response.json()
 
 #In case there are no more departures today
