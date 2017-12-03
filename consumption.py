@@ -17,7 +17,7 @@ if len(argv) != 4:
 else:
     script, req_route, req_stop, req_direction = argv
 
-#Use a generator to list conversion to find a match for the requested route
+#Use a generator converted to a list to find a match for the requested route
 routes_json = requests.get(get_routes_url, params=payload).json()
 routes = list((route for route in routes_json if req_route.lower() in route['Description'].lower()))
 
@@ -32,10 +32,10 @@ elif len(routes) <= 0:
     print('Route \'{}\' not found or not in service today.'.format(req_route))
     quit()
 
-#If we reach this point, one route has been found for the input
+#If we reach this point, one route has been identified
 route = routes[0]['Route']
 
-#Now we validate that the route goes in the entered direction
+#Now we validate that the route goes in the requested direction
 directions_json = requests.get(get_directions_url.format(route=route), params=payload).json()
 try:
     direction = (direction['Value'] for direction in directions_json if req_direction.lower() == direction['Text'][:-5].lower()).__next__()
@@ -44,7 +44,7 @@ except StopIteration as stopiter:
     print('For this route, enter either {x} or {y}.'.format(x=directions_json[0]['Text'][:-5].lower(), y=directions_json[1]['Text'][:-5].lower()))
     quit()
 
-#Now we validate that the entered bus stop exists on the route, again using a generator
+#Now we validate that the requested bus stop exists on the route, again using a generator
 stops_json = requests.get(get_stops_url.format(route=route, direction=direction), params=payload).json()
 try:
     stop = (stop['Value'] for stop in stops_json if req_stop.lower() == stop['Text'].lower()).__next__()
