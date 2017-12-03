@@ -3,8 +3,6 @@ from time import time
 
 import requests
 
-#TODO: check for 200 status on get requests
-
 #API URLs and payload info
 get_routes_url = 'http://svc.metrotransit.org/NexTrip/Routes'
 get_directions_url = 'http://svc.metrotransit.org/NexTrip/Directions/{route}'
