@@ -1,4 +1,5 @@
 from sys import argv
+from time import time
 
 import requests
 
@@ -54,6 +55,15 @@ except StopIteration as stopiter:
     quit()
 
 #If we reach this point, we have a valid route, stop, and direction
-print(route, stop, direction)
 departures_json = requests.get(get_departures_url.format(route=route, direction=direction, stop=stop), params=payload).json()
 
+#In case there are no more departures today
+if len(departures_json) < 1:
+    print('No more departures from {stop} scheduled for today.'.format(stop=req_stop))
+    quit()
+
+#Finally, calculate the difference between now and the given departure time in minutes
+departure = int(departures_json[0]['DepartureTime'][6:16])
+now = int(time())
+minutes_to_departure = (departure-now)//60
+print('{minutes} minutes'.format(minutes=minutes_to_departure))
