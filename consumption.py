@@ -84,7 +84,7 @@ if len(departures_json) < 1:
     print('No more departures from {stop} scheduled for today.'.format(stop=req_stop))
     quit()
 
-#Finally, calculate the difference between now and the given departure time in minutes
+#Finally, calculate the difference between now and the given departure time
 departure = int(departures_json[0]['DepartureTime'][6:16])
 now = int(time())
 minutes_to_departure = (departure-now)//60
