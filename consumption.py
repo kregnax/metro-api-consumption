@@ -1,3 +1,8 @@
+'''
+This script takes 3 arguments (Bus Route, Bus Stop Name, and Direction) and returns
+the time in minutes until the next departure.
+'''
+
 from sys import argv
 from time import time
 
