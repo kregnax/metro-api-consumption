@@ -34,7 +34,7 @@ handle_status_code(routes_response.status_code)
 routes_json = routes_response.json()
 
 #Use a generator converted to a list to find a match for the requested route
-routes = list((route for route in routes_json if req_route.lower() in route['Description'].lower()))
+routes = list((route for route in routes_json if req_route.lower() in route['Description'].lower().strip()))
 #If more than 1 potential route matches, display routes so user can rerun script with desired route
 if len(routes) > 1:
     print('More than one possible route found, please rerun script using the desired route:')
@@ -56,12 +56,11 @@ directions_json = directions_response.json()
 
 #Now we validate that the route goes in the requested direction
 try:
-    direction = (direction['Value'] for direction in directions_json if req_direction.lower() == direction['Text'][:-5].lower()).__next__()
+    direction = (direction['Value'] for direction in directions_json if req_direction.lower() == direction['Text'][:-5].lower().strip()).__next__()
 except StopIteration as stopiter:
     print('The direction you entered is not valid for the given route.')
     print('For this route, enter either {x} or {y}.'.format(x=directions_json[0]['Text'][:-5].lower(), y=directions_json[1]['Text'][:-5].lower()))
     quit()
-
 
 stops_response = requests.get(get_stops_url.format(route=route, direction=direction), params=payload)
 handle_status_code(stops_response.status_code)
@@ -69,7 +68,7 @@ stops_json = stops_response.json()
 
 #Now we validate that the requested bus stop exists on the route, again using a generator
 try:
-    stop = (stop['Value'] for stop in stops_json if req_stop.lower() == stop['Text'].lower()).__next__()
+    stop = (stop['Value'] for stop in stops_json if req_stop.lower() == stop['Text'].lower().strip()).__next__()
 except StopIteration as stopiter:
     print('No bus stop named \'{stop}\' found on your entered route.'.format(stop=req_stop))
     print('The bus stops on your entered route are as follows:')
